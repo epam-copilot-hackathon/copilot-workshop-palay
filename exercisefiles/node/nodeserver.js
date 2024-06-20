@@ -44,7 +44,24 @@ const server = http.createServer((req, res) => {
             if (phoneNumberRegex.test(phoneNumber)) {
                 res.end('valid');
             } else {
-                console.log(phoneNumber);
+                res.end('invalid');
+            }
+        }
+    } else if (pathname === '/validateDNI') {
+        const dni = query.dni;
+        if (!dni) {
+            res.end('DNI not passed');
+        } else {
+            const dniRegex = /^\d{8}[A-Z]$/;
+            if (dniRegex.test(dni)) {
+                const letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
+                const letter = letters.charAt(parseInt(dni, 10) % 23);
+                if (letter === dni.charAt(8)) {
+                    res.end('valid');
+                } else {
+                    res.end('invalid');
+                }
+            } else {
                 res.end('invalid');
             }
         }

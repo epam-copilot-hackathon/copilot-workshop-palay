@@ -77,6 +77,27 @@ describe('Node Server', () => {
         });
     });
 
+    it('should validate Spanish DNI', (done) => {
+        const dnies = ['12345678Z', '98765432M', '98765432X'];
+        const expectedResponses = ['valid', 'valid', 'invalid'];
+        let count = 0;
+        dnies.forEach((dni, index) => {
+            http.get(`http://localhost:3000/validateDNI?dni=${dni}`, (res) => {
+                let data = '';
+                res.on('data', (chunk) => {
+                    data += chunk;
+                });
+                res.on('end', () => {
+                    assert.equal(data, expectedResponses[index], `Failed for ${dni}`);
+                    count++;
+                    if (count === dnies.length) {
+                        done();
+                    }
+                });
+            });
+        });
+    });
+
     //add test to check valiatephoneNumber
 
     //write test to validate validateSpanishDNI
